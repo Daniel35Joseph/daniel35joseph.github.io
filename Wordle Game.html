@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Wordle Game</title>
+    <style>
+        .guess {
+            margin-bottom: 10px;
+        }
+    </style>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <h1>Wordle Game</h1>
+    <h2>Guess the five-letter word:</h2>
+
+    <div id="feedback"></div>
+
+    <div id="word"></div>
+
+    <div class="guess">
+        <input type="text" id="guessInput" maxlength="5">
+        <button id="guessButton" onclick="checkGuess()">Guess</button>
+        <button id="newGameButton" hidden="true" onclick="newGame()">New Game</button>
+    </div>
+
+    <div id="alphabets">
+        <h2 id="alphabetTableTitle">Alphabet Table</h2>
+        <table>
+            <tr>
+                <td id="A">A</td>
+                <td id="B">B</td>
+                <td id="C">C</td>
+                <td id="D">D</td>
+                <td id="E">E</td>
+                <td id="F">F</td>
+                <td id="G">G</td>
+                <td id="H">H</td>
+                <td id="I">I</td>
+                <td id="J">J</td>
+            </tr>
+            <tr>
+                <td id="K">K</td>
+                <td id="L">L</td>
+                <td id="M">M</td>
+                <td id="N">N</td>
+                <td id="O">O</td>
+                <td id="P">P</td>
+                <td id="Q">Q</td>
+                <td id="R">R</td>
+                <td id="S">S</td>
+                <td id="T">T</td>
+            </tr>
+            <tr>
+                <td></td>
+                <td></td>
+                <td id="U">U</td>
+                <td id="V">V</td>
+                <td id="W">W</td>
+                <td id="X">X</td>
+                <td id="Y">Y</td>
+                <td id="Z">Z</td>
+                <td></td>
+                <td></td>
+            </tr>
+        </table>
+    </div>
+
+
+    <script src="five_letters_words.js"></script>
+    <script>
+        // Define the target word
+        var randomIndex = Math.floor(Math.random() * 33);
+        const wordsList = fiveLetterWords
+        const targetWord = wordsList[randomIndex];
+
+        // Initialize variables
+        let attempts = 0;
+        let maxAttempts = 6;
+
+        var guessInput = document.getElementById("guessInput");
+        var alphabetTable = document.getElementById("alphabets");
+
+        alphabetTable.addEventListener("click", function(event) {
+            if (event.target.tagName === "TD") {
+                guessInput.value += event.target.textContent;
+            }
+        });
+
+        // Function to check the user's guess
+        function checkGuess() {
+            const guessInput = document.getElementById("guessInput");
+            const guess = guessInput.value.toUpperCase();
+
+            if (guess.length !== 5) {
+                alert("Please enter a five-letter word.");
+                return;
+            }
+
+            // Increase the attempt count
+            attempts++;
+
+            // Check the guess and provide feedback
+            let feedback = '';
+            let correct = 0;
+
+            for (let i = 0; i < guess.length; i++) {
+                if (guess[i] === targetWord[i]) {
+                    feedback += '<span style="background-color: rgb(106, 170, 100);">' + guess[i] + '</span>';
+                    var cell = document.getElementById(guess[i]);
+                    cell.style.backgroundColor = 'rgb(106, 170, 100)';
+                    cell.style.color = 'black';
+                    correct++;
+                } else if (targetWord.includes(guess[i])) {
+                    feedback += '<span style="background-color: rgb(201, 180, 88);">' + guess[i] + '</span>';
+                    var cell = document.getElementById(guess[i]);
+                    if (cell.style.backgroundColor !== 'rgb(106, 170, 100)') {
+                        cell.style.backgroundColor = 'rgb(201, 180, 88)';
+                        cell.style.color = 'black';
+                    }
+                } else {
+                    feedback += guess[i];
+                    var cell = document.getElementById(guess[i]);
+                    if (cell.style.backgroundColor !== 'rgb(106, 170, 100)' && cell.style.backgroundColor !== 'rgb(201, 180, 88)') {
+                        cell.style.backgroundColor = 'rgb(120, 124, 126)';
+                        cell.style.color = 'black';
+                    }
+                }
+            }
+
+            document.getElementById("feedback").innerHTML += '<p>Guess #' + attempts + ': ' + feedback + '</p>';
+
+            // Check if the word has been guessed correctly
+            if (correct === 5) {
+                document.getElementById("feedback").innerHTML += '<p>Congratulations! You guessed the word correctly.</p>';
+                document.getElementById("guessInput").disabled = true;
+                document.getElementById("guessInput").value = '';
+                document.getElementById("guessButton").hidden = true;
+                document.getElementById("newGameButton").hidden = false;
+            } else if (attempts >= maxAttempts) {
+                document.getElementById("feedback").innerHTML += '<p>Game over! The correct word was ' + targetWord + '.</p>';
+                document.getElementById("guessInput").disabled = true;
+                document.getElementById("guessInput").value = '';
+                document.getElementById("guessButton").hidden = true;
+                document.getElementById("newGameButton").hidden = false;
+            }
+
+            guessInput.value = '';
+            guessInput.focus();
+        }
+        
+        function handleKeyPress(event) {
+            if (event.keyCode === 13) {
+                event.preventDefault();
+                document.getElementById("guessButton").click();
+            }
+        }
+
+        document.addEventListener("keypress", function(event) {
+            guessInput.focus();
+        });
+
+        function newGame() {
+            location.reload();
+        }
+
+        document.getElementById("guessInput").addEventListener("keypress", handleKeyPress);
+    </script>
+</body>
+</html>
