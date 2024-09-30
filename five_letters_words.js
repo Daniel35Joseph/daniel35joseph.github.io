@@ -32,27 +32,21 @@ const fiveLetterWords = [
     "WHEAT",
     "XENON",
     "YOUNG",
-    "ZEBRA"
+    "ZEBRA",
+    "BEAST",
+    "POWER"
 ];
 
-async function loadFiveLetterWords() {
-    const response = await fetch('https://wordsapiv1.p.rapidapi.com/words/?letters=5', {
-      headers: {
-        'X-RapidAPI-Host': 'wordsapiv1.p.rapidapi.com',
-        'X-RapidAPI-Key': 'YOUR_API_KEY'
-      }
-    });
-  
-    if (response.ok) {
-      const data = await response.json();
-      const words = data.results.data;
-      console.log(words);
-    } else {
-      console.error('Failed to fetch the words.');
-    }
-  }
-  
-loadFiveLetterWords();
+fetch('wordsapi_sample.json')
+  .then(response => response.json())
+  .then(data => {
+    // You can work with the JSON data here
+    console.log(data);
+  })
+  .catch(error => {
+    // Handle any errors that occurred during the fetch or parsing
+    console.error('Error:', error);
+  });
 
   
   

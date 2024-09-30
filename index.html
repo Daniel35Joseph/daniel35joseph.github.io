@@ -23,6 +23,8 @@
         <button id="newGameButton" hidden="true" onclick="newGame()">New Game</button>
     </div>
 
+    <div id="space"></div>
+
     <div id="alphabets">
         <h2 id="alphabetTableTitle">Alphabet Table</h2>
         <table>
@@ -93,6 +95,11 @@
 
             if (guess.length !== 5) {
                 alert("Please enter a five-letter word.");
+                return;
+            }
+
+            if ((wordsList.includes(guess) !== true)){
+                alert("Please enter a valid word");
                 return;
             }
 
